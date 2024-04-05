@@ -7,7 +7,11 @@ interface LoginButtonProps {
   mode?: 'modal' | 'redirect'
   asChild?: boolean
 }
-const LogginButton = ({ children, mode, asChild }: LoginButtonProps) => {
+const LogginButton = ({
+  children,
+  mode = 'redirect',
+  asChild,
+}: LoginButtonProps) => {
   const router = useRouter()
 
   const onClick = () => {
