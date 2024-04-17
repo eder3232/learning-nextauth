@@ -1,10 +1,10 @@
 'use client'
 
-import { useTransition, useState } from 'react'
+import { useState, useTransition } from 'react'
 
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
 import {
   Form,
@@ -12,37 +12,37 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form'
 
-import CardWrapper from './card-wrapper'
-import { LoginSchema } from '../../schemas/index'
-import { Input } from '../ui/input'
+import { RegisterSchema } from '../../schemas/index'
 import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 import { FormError } from '../utils/form-error'
 import { FormSuccess } from '../utils/form-success'
-import { login } from '@/actions/login'
+import CardWrapper from './card-wrapper'
+import { register } from '@/actions/register'
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>('')
   const [success, setSuccess] = useState<string | undefined>('')
 
   const [isPending, startTransition] = useTransition()
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: '',
       password: '',
+      name: '',
     },
   })
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     setError('')
     setSuccess('')
     // console.log(values)
     startTransition(() => {
-      login(values).then((data) => {
+      register(values).then((data) => {
         setError(data.error)
         setSuccess(data.success)
       })
@@ -51,9 +51,9 @@ const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel={'Welcome back'}
-      backButtonLabel={"Don't have an account?"}
-      backButtonHref={'/auth/register'}
+      headerLabel={'Create an account'}
+      backButtonLabel={'Already have an account?'}
+      backButtonHref={'/auth/login'}
       showSocial
     >
       <Form {...form}>
@@ -93,6 +93,23 @@ const LoginForm = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Name"
+                      type="text"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
 
           <FormError message={error} />
@@ -107,4 +124,4 @@ const LoginForm = () => {
   )
 }
 
-export default LoginForm
+export default RegisterForm
