@@ -116,7 +116,7 @@ const RegisterForm = () => {
           <FormSuccess message={success} />
 
           <Button type="submit" className="w-full">
-            Login
+            Register
           </Button>
         </form>
       </Form>
